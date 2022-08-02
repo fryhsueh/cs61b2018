@@ -26,12 +26,12 @@ public class NBody {
         return planets;
     }
 
-    public static void drawBackGround(double radius) {
+    private static void drawBackGround(double radius) {
         StdDraw.setScale(radius * -1, radius);
         StdDraw.picture(0, 0, "images/starfield.jpg");
     }
 
-    public static void drawplanets(Planet[] planets) {
+    private static void drawplanets(Planet[] planets) {
         for (Planet b : planets) {
             b.draw();
         }
