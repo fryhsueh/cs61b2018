@@ -1,39 +1,43 @@
 public class SLList {
-    private IntNode first;
+    private IntNode sentinal;
+    private int size = 0;
+
+    public SLList() {
+        sentinal = new IntNode(-1, null);
+    }
 
     public SLList(int num) {
-        first = new IntNode(num, null);
+        this();
+        sentinal.next = new IntNode(num, null);
+        sizeIncrease();
     }
     
     // add num in the front of the SLList
     public void addFirst(int num) {
-        first = new IntNode(num, first);
+        sentinal.next = new IntNode(num, sentinal.next);
+        sizeIncrease();
     }
 
     // get 
     public int getFirst() {
-        return first.item;
+        return sentinal.next.item;
     }
 
     public void addLast(int num) {
-        IntNode tail = first;
+        IntNode tail = sentinal.next;
         while (tail.next != null) {
             tail = tail.next;
         }
         tail.next = new IntNode(num, null);
+        sizeIncrease();
     }
 
-
-    /**return the size of list the starts at IntNode n*/
-    private static int size(IntNode n) {
-        if (n.next == null) {
-            return 1;
-        }
-        return 1 + size(n.next);
-    } 
+    private void sizeIncrease() {
+        size += 1;
+    }
 
     public int size() {
-        return size(first);
+        return size;
     }
 
     public static void main(String[] args) {
