@@ -8,7 +8,7 @@ public class LinkedListDeque<T> {
     }
 
     public LinkedListDeque(LinkedListDeque<T> other) {
-        
+
     }
 
     public T getRecursive(int index) {
@@ -27,19 +27,17 @@ public class LinkedListDeque<T> {
 
     public void addFirst(T item) {
         QueueNode first = new QueueNode(item);
-        first._next = centinel._next;
-        first._prex = centinel;
-        centinel._next._prex = first;
-        centinel._next = first;
+        QueueNode oldFirst = centinel._next;
+        connect(centinel, first);
+        connect(first, oldFirst);
         increaseSize();
     }
 
     public void addLast(T item) {
         QueueNode last = new QueueNode(item);
-        last._prex = centinel._prex;
-        last._next = centinel;
-        centinel._prex._next = last;
-        centinel._prex = last;
+        QueueNode oldLast = centinel._prex;
+        connect(oldLast, last);
+        connect(last, centinel);
         increaseSize();
     }
 
@@ -73,9 +71,8 @@ public class LinkedListDeque<T> {
         }
 
         QueueNode first = centinel._next;
-        first._next._prex = centinel;
-        centinel._next = first._next;
-
+        QueueNode behindFirst = first._next;
+        connect(centinel, behindFirst);
         decreaseSize();
 
         return first._item;
@@ -87,12 +84,16 @@ public class LinkedListDeque<T> {
         }
 
         QueueNode last = centinel._prex;
-        last._prex._next = centinel;
-        centinel._prex = last._prex;
-
+        QueueNode aboveLast = last._prex;
+        connect(aboveLast, centinel);
         decreaseSize();
 
         return last._item;
+    }
+
+    private void connect(QueueNode head, QueueNode tail) {
+        head._next = tail;
+        tail._prex = head;
     }
 
     public T get(int index) {
