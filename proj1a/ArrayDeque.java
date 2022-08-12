@@ -26,8 +26,11 @@ public class ArrayDeque<T> {
         size = 0;
     }
 
-    public ArrayDeque(ArrayDeque<T> other) {
-
+    public ArrayDeque(ArrayDeque other) {
+        this();
+        for (int i = 0; i < other.size(); i++) {
+            addLast((T) other.get(i));
+        }
     }
 
     public void addFirst(T item) {
@@ -69,26 +72,31 @@ public class ArrayDeque<T> {
             /*
              *   0   1   2                 0   1   2   3   4   5      0   1   2                0   1   2   3   4   5
              * |_1_|_x_|_1_| =addFirst=> |_1_|_x_|_x_|_x_|_1_|_1_|  |_1_|_x_|_1_| =addLast=> |_1_|_1_|_x_|_x_|_x_|_1_|
-             *       ^^                        ^           ^              ^^                           ^       ^  
-             *       nL/nF                     nL          nF             nL/nF                        nL      nF
+             *       ^^                        ^       ^                  ^^                           ^       ^  
+             *       nL/nF                     nL      nF                 nL/nF                        nL      nF
              */
-
-            /* copy left part */
-            int numOfLeftPart = nextLast;
-            System.arraycopy(items, 0, doubleSize, 0, numOfLeftPart);
-
-            /* copy right part */
-            int numOfRightPart = items.length - numOfLeftPart;
-            int oldFirstIndex = numOfLeftPart;
-            int newFirstIndex = doubleSize.length - numOfRightPart;
-            System.arraycopy(items, oldFirstIndex, doubleSize, newFirstIndex, numOfRightPart);
-
-            /* update index */
-            nextFirst = indexMinusOne(newFirstIndex);
-            items = doubleSize;
-            return;
+            resizeItems(doubleSize);
         }
         return;
+    }
+
+    private void resizeItems(T[] array) {
+
+        /* copy left part */
+        int numOfLeftPart = nextLast;
+        System.arraycopy(items, 0, array, 0, numOfLeftPart);
+
+        /* copy right part */
+        int numOfRightPart = items.length - numOfLeftPart;
+        int oldFirstIndex = numOfLeftPart;
+        int newFirstIndex = array.length - numOfRightPart;
+        System.arraycopy(items, oldFirstIndex, array, newFirstIndex, numOfRightPart);
+
+        /* update index */
+        nextFirst = indexMinusOne(newFirstIndex);
+        items = array;
+
+
     }
 
     public boolean isEmpty() {
@@ -109,11 +117,59 @@ public class ArrayDeque<T> {
     }
 
     public T removeFirst() {
-        return null;
+        int firstIndex = indexAddOne(nextFirst);
+        T item = items[firstIndex];
+        items[firstIndex] = null;
+        size -= 1;
+        nextFirst = firstIndex;
+
+        resizeIfTooEmpty();
+        return item;
     }
 
     public T removeLast() {
-        return null;
+        int lastIndex = indexMinusOne(nextLast);
+        T item = items[lastIndex];
+        items[lastIndex] = null;
+        size -= 1;
+        nextLast = lastIndex;
+
+        resizeIfTooEmpty();
+        return item;
+    }
+
+    private void resizeIfTooEmpty() {
+        if (size * 1.0 / items.length <= 0.25) {
+            T[] halfSize = (T[]) new Object[items.length / 2];  
+            /* 
+             *    0   1   2   3   4   5                    0   1   2   3   4   5        0   1   2
+             *  |_1_|_1_|_x_|_x_|_x_|_x_| =removeFirst=> |_x_|_1_|_x_|_x_|_x_|_x_| => |_1_|_x_|_x_|
+             * 
+             *            ^           ^                    ^       ^                        ^   ^
+             *            nL          nF                   nF      nL                       nL  nF
+             * 
+             *    0   1   2   3   4   5                   0   1   2   3   4   5        0   1   2 
+             *  |_1_|_1_|_x_|_x_|_x_|_x_| =removeLast=> |_1_|_x_|_x_|_x_|_x_|_x_| => |_1_|_x_|_x_|
+             *            ^           ^                       ^               ^            ^   ^
+             *            nL          nF                      nL              nF           nL  nF
+             * 
+             */
+            if (items[0] != null) {
+                resizeItems(halfSize);
+            }
+            else {
+                int oldFirstIndex = indexAddOne(nextFirst);
+                System.arraycopy(items, oldFirstIndex, halfSize, 0, size);
+
+                /*update index */
+                items = halfSize;
+                nextFirst = indexMinusOne(0);
+                nextLast = size;
+            }
+
+        }
+        return;
+
     }
     
     public T get(int i) {
@@ -130,6 +186,18 @@ public class ArrayDeque<T> {
             ad.addLast(item);
            
         }
+        ad.printDeque();
+
+        for (int item : list) {
+            //ad.removeFirst();
+            ad.removeLast();
+        }
+        ad.printDeque();
+        ad.removeFirst();
+        ad.removeFirst();
+        ad.removeFirst();
+        ad.removeFirst();
+        ad.removeFirst();
         ad.printDeque();
     }
 
