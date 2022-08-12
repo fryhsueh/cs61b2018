@@ -1,5 +1,3 @@
-import org.w3c.dom.ranges.Range;
-
 public class ArrayDeque<T> {
     private int size;
     /**items is a circular array */
@@ -87,8 +85,8 @@ public class ArrayDeque<T> {
         System.arraycopy(items, 0, array, 0, numOfLeftPart);
 
         /* copy right part */
-        int numOfRightPart = items.length - numOfLeftPart;
-        int oldFirstIndex = numOfLeftPart;
+        int numOfRightPart = size - numOfLeftPart;
+        int oldFirstIndex = indexAddOne(nextFirst);
         int newFirstIndex = array.length - numOfRightPart;
         System.arraycopy(items, oldFirstIndex, array, newFirstIndex, numOfRightPart);
 
@@ -117,6 +115,10 @@ public class ArrayDeque<T> {
     }
 
     public T removeFirst() {
+        if (isEmpty()) {
+            return null;
+        }
+
         int firstIndex = indexAddOne(nextFirst);
         T item = items[firstIndex];
         items[firstIndex] = null;
@@ -128,6 +130,10 @@ public class ArrayDeque<T> {
     }
 
     public T removeLast() {
+        if (isEmpty()) {
+            return null;
+        }
+
         int lastIndex = indexMinusOne(nextLast);
         T item = items[lastIndex];
         items[lastIndex] = null;
@@ -157,7 +163,8 @@ public class ArrayDeque<T> {
             if (items[0] != null) {
                 resizeItems(halfSize);
             }
-            else {
+            else 
+            {
                 int oldFirstIndex = indexAddOne(nextFirst);
                 System.arraycopy(items, oldFirstIndex, halfSize, 0, size);
 
