@@ -1,4 +1,4 @@
-public class ArrayDeque<T> implements Deque<T>{
+public class ArrayDeque<T> implements Deque<T> {
     private int size;
     /**items is a circular array */
     /* nL: nextLast, nF: nextFirst

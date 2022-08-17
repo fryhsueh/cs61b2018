@@ -8,8 +8,8 @@ public class OffByN implements CharacterComparator {
     @Override
     public boolean equalChars(char x, char y) {
         // TODO Auto-generated method stub
-        int diff = Math.abs(x - y);
-        return diff == this.diff;
+        int d = Math.abs(x - y);
+        return d == diff;
 
     }
     

@@ -1,8 +1,6 @@
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import javax.swing.text.StyledEditorKit.BoldAction;
-
 public class TestOffByOne {
     // You must use this CharacterComparator and not instantiate
     // new ones, or the autograder might be upset.
@@ -15,7 +13,11 @@ public class TestOffByOne {
         boolean actual = offByOne.equalChars('a', 'b');
         assertEquals(expect, actual);
 
+        assertTrue(offByOne.equalChars('%', '&'));
+        
         assertFalse(offByOne.equalChars('a', 'a'));
+
+        assertFalse(offByOne.equalChars('A', 'b'));
 
     }
 
