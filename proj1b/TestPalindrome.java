@@ -19,7 +19,7 @@ public class TestPalindrome {
     @Test
     public void testIsPalindrome() {
         String[] PALINDROME = { "a", "racecar", "" };
-        
+
         for (String word : PALINDROME) {
             assertTrue(palindrome.isPalindrome(word));
         }
@@ -29,5 +29,13 @@ public class TestPalindrome {
         for (String word : NOTPALINDROME) {
             assertFalse(palindrome.isPalindrome(word));
         }
+
+
+        CharacterComparator cc = new OffByOne();
+
+        assertTrue(palindrome.isPalindrome("aabb", cc));
+
+        assertFalse(palindrome.isPalindrome("bbaa", cc));
+
     }
 }

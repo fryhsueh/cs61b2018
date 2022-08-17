@@ -20,7 +20,7 @@ public class Palindrome {
     }
     
     private boolean checkPalindromeInDeque(Deque<Character> deque) {
-        
+
         int num = deque.size();
 
         if (num <= 1) {
@@ -37,5 +37,30 @@ public class Palindrome {
 
         return true;
     }
+    
+    public boolean isPalindrome(String word, CharacterComparator cc) {
+        if (word == null) {
+            return false;
+        }
 
+        return checkPalindroem(word, cc);
+    }
+
+    private boolean checkPalindroem(String word, CharacterComparator cc) {
+        int num = word.length();
+
+        if (num <= 1) {
+            return true;
+        }
+
+        char first = word.charAt(0);
+        char last = word.charAt(num - 1);
+
+        if (!cc.equalChars(first, last)) {
+            return false;
+        }
+
+        String rest = word.substring(1, num - 1);
+        return checkPalindroem(rest, cc);
+    }
 }
