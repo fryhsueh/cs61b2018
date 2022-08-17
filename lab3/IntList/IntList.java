@@ -89,7 +89,7 @@ public class IntList {
 
         IntList tail = A;
         while (tail.rest != null) {
-            tail= tail.rest;
+            tail = tail.rest;
         }
         tail.rest = B;
         return A;
@@ -135,16 +135,16 @@ public class IntList {
      * @return the reverse of L
      */
     private static IntList doReverse(IntList L, IntList R) {
-        IntList OldRest = L.rest;
+        IntList oldRest = L.rest;
         
         /*do reverse, reset the rest of L */
         L.rest = R;
 
-        if (OldRest == null) {
+        if (oldRest == null) {
             return L;
         }
 
-        return doReverse(OldRest, L);
+        return doReverse(oldRest, L);
     }
 
     
