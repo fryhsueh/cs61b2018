@@ -1,6 +1,4 @@
 package byog.lab5;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
@@ -30,11 +28,6 @@ public class HexWorld {
      * @param s size of Hexagon
      * @param t
      */
-
-     /*size of aa  is 2
-      *       aaaa
-      *        aa
-      */
     public static void addHex(TETile[][] world, Position p, int s, TETile t) {
         int bottomX = p.x;
         int bottomY = p.y;
@@ -50,27 +43,20 @@ public class HexWorld {
          * 
          */
         for (int row = 0; row < s; row += 1) {
-            addBottomLine(world, bottomX, bottomY, length, t);
-            addTopLine(world, bottomX, bottomY, length, t, row, s);
+            addLine(world, bottomX, bottomY, length, t); //add bottomLine
+
+            int topX = bottomX;
+            int topY = bottomY + 2 * (s - row) - 1;
+            addLine(world, topX, topY, length, t); //add topLine
+
             length += 2;
             bottomX -= 1;
             bottomY += 1;
         }
 
     }
-
-    private static void addBottomLine(TETile[][] world, int x, int y, int length, TETile t) {
-        addLine(world, x, y, length, t);
-    }
-
-    private static void addTopLine(TETile[][] world, int bottomX, int bottomY, int length, TETile t, int row, int size) {
-        int x = bottomX;
-        int y = bottomY + 2 * (size - row) - 1;
-        addLine(world, x, y, length, t);
-
-    }
     
-    /** add TETiles to world at (x, y) as given length*/
+    /** add a line of TETiles to world at (x, y) as given length*/
     private static void addLine(TETile[][] world, int x, int y, int length, TETile t) {
       
         for (int i = x; i < x + length; i += 1) {
@@ -83,12 +69,92 @@ public class HexWorld {
 
     private static boolean withinBoundary(int x, int y, TETile[][] world) {
         return x >= 0
-            && x < world.length
-            && y >= 0
-            && y < world[0].length;
+                && x < world.length
+                && y >= 0
+                && y < world[0].length;
+    }
+    
+    /**
+     * 
+     * @param size num of hexagons at each side
+     * @param hexagonSize size of a single hexagon
+     */
+    private static void drawHexagons(int size, int hexagonSize) {
+
+        /*initialize*/
+        int HEIGHT = 45;
+        int WIDTH = 45;
+
+        TERenderer te = new TERenderer();
+        te.initialize(WIDTH, HEIGHT);
+
+        TETile[][] world = new TETile[WIDTH][HEIGHT];
+        for (int x = 0; x < WIDTH; x += 1) {
+            for (int y = 0; y < HEIGHT; y += 1) {
+                world[x][y] = Tileset.NOTHING;
+            }
+        }
+
+        /*add hexagons at given positions */
+
+        addHexs(world, size, 10, 10, hexagonSize);
+
+        /*draw */
+
+        te.renderFrame(world);
     }
 
-    public static void main(String[] args) {
+
+    /*
+     *   **
+     *  ****
+     * ******
+     * ******  <- long side == 6
+     *  ****
+     *   **  <- short side , hexagon size == 2
+     */
+
+    private static void addHexs(TETile[][] world, int size, int leftPosX, int leftPosY, int hexagonSize) {
+        int num = size;
+        int heightOfHex = hexagonSize * 2;
+        int shortSide = hexagonSize;
+        int longSide = hexagonSize + 2 * (hexagonSize - 1);
+
+        /*adding form outside to inside */
+        for (int vertical = 0; vertical < size - 1; vertical += 1) {
+            addVertical(world, num, leftPosX, leftPosY, heightOfHex, hexagonSize); //add left vertical line
+
+            int rightPosX = leftPosX + (size - vertical - 1) * (shortSide + longSide) ;
+            int rightPosY = leftPosY;
+            addVertical(world, num, rightPosX, rightPosY, heightOfHex, hexagonSize); //add rigth vertical line
+
+            leftPosX += (longSide - shortSide) / 2 + shortSide;
+            leftPosY -= hexagonSize;
+            num += 1;
+        }
+        
+        addVertical(world, num, leftPosX, leftPosY, heightOfHex, hexagonSize); //add middle line
+    
+    }
+
+   
+    /*at given (x, y) add hexagons from bottom to top*/
+    private static void addVertical(TETile[][] world, int num, int x, int y, int height, int hexagonSize) {
+        Random r = new Random();
+
+
+        for (int i = 0; i < num; i += 1) {
+
+            TETile tile = Tileset.random();
+            TETile t = TETile.colorVariant(tile, 100, 100, 100, r);
+
+            int posY = y + i * height;
+            addHex(world, new Position(x, posY), hexagonSize, t);
+
+        }
+    }
+    
+    private static void drawAHexTest() {
         int HEIGHT = 30;
         int WIDTH = 60;
 
@@ -103,8 +169,16 @@ public class HexWorld {
         }
 
         HexWorld.Position p = new Position(10, 10);
-        HexWorld.addHex(world, p, 2, Tileset.FLOWER);
+        HexWorld.addHex(world, p, 3, Tileset.FLOWER);
 
         te.renderFrame(world);
+
+    }
+
+
+    public static void main(String[] args) {
+    //drawAHexTest();
+    drawHexagons(3, 3);
+
     }
 }
