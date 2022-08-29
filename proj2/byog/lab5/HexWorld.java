@@ -40,7 +40,6 @@ public class HexWorld {
          *       aaaaaaa
          *        aaaaa 
          *         aaa  <- bottomLine, row = 0
-         * 
          */
         for (int row = 0; row < s; row += 1) {
             addLine(world, bottomX, bottomY, length, t); //add bottomLine
@@ -105,21 +104,24 @@ public class HexWorld {
     }
 
 
-    /*
-     *   **
-     *  ****
-     * ******
-     * ******  <- long side == 6
-     *  ****
-     *   **  <- short side , hexagon size == 2
+    /**
+     *<pre>
+     * eg:
+     *      **
+     *     ****
+     *    ******
+     *    ******  <- long side == 6
+     *     ****
+     *      **  <- short side , hexagon size == 2
+     *</pre>
      */
-
+    
     private static void addHexs(TETile[][] world, int size, int leftPosX, int leftPosY, int hexagonSize) {
         int num = size;
         int heightOfHex = hexagonSize * 2;
         int shortSide = hexagonSize;
         int longSide = hexagonSize + 2 * (hexagonSize - 1);
-
+    
         /*adding form outside to inside */
         for (int vertical = 0; vertical < size - 1; vertical += 1) {
             addVertical(world, num, leftPosX, leftPosY, heightOfHex, hexagonSize); //add left vertical line

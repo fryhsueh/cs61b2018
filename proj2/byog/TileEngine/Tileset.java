@@ -1,6 +1,7 @@
 package byog.TileEngine;
 
 import java.awt.Color;
+import java.util.Random;
 
 /**
  * Contains constant tile objects, to avoid having to remake the same tiles in different parts of
@@ -33,6 +34,30 @@ public class Tileset {
     public static final TETile SAND = new TETile('▒', Color.yellow, Color.black, "sand");
     public static final TETile MOUNTAIN = new TETile('▲', Color.gray, Color.black, "mountain");
     public static final TETile TREE = new TETile('♠', Color.green, Color.black, "tree");
+
+    public static TETile random() {
+            Random random = new Random();
+            int pattern = random.nextInt(7);
+
+            switch (pattern) {
+                    case 0:
+                            return WALL;
+                    case 1:
+                            return FLOOR;
+                    case 2:
+                            return GRASS;
+                    case 3:
+                            return WATER;
+                    case 4:
+                            return SAND;
+                    case 5:
+                            return MOUNTAIN;
+                    case 6:
+                            return TREE;
+                    default:
+                            return FLOWER;    
+            }
+    }
 }
 
 
