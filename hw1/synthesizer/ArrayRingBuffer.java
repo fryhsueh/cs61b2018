@@ -13,7 +13,6 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      * Create a new ArrayRingBuffer with the given capacity.
      */
     public ArrayRingBuffer(int capacity) {
-        // TODO: Create new array with capacity elements.
         //       first, last, and fillCount should all be set to 0.
         //       this.capacity should be set appropriately. Note that the local variable
         //       here shadows the field we inherit from AbstractBoundedQueue, so
@@ -31,7 +30,6 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      * covered Monday.
      */
     public void enqueue(T x) {
-        // TODO: Enqueue the item. Don't forget to increase fillCount and update last.
         if (fillCount == capacity) {
             throw new RuntimeException("Ring buffer overflow");
         }
@@ -46,19 +44,12 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         return out == capacity ? 0 : out;
     }
 
-    private int indexMinusOne(int index) {
-        int out = index - 1;
-        return out == -1 ? (capacity - 1) : out; 
-    }
-
- 
     /**
      * Dequeue oldest item in the ring buffer. If the buffer is empty, then
      * throw new RuntimeException("Ring buffer underflow"). Exceptions
      * covered Monday.
      */
     public T dequeue() {
-        // TODO: Dequeue the first item. Don't forget to decrease fillCount and update 
         if (isEmpty()) {
             throw new RuntimeException("Ring buffer underflow");
         }
@@ -76,42 +67,37 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      * Return oldest item, but don't remove it.
      */
     public T peek() {
-        // TODO: Return the first item. None of your instance variables should change.
         if (isEmpty()) {
-            return null;
+            throw new RuntimeException("Ring buffer underflow");
         }
         return rb[first];
     }
 
-    // TODO: When you get to part 5, implement the needed code to support iteration.
     @Override
     public Iterator<T> iterator() {
-        // TODO Auto-generated method stub
         return new ArrayRingIterator();
     }
 
     private class ArrayRingIterator implements Iterator<T> {
         private int index;
-        private int IteratorCount;
+        private int iteratorCount;
 
         public ArrayRingIterator() {
             index = first;
-            IteratorCount = 0;
+            iteratorCount = 0;
         }
 
         @Override
         public boolean hasNext() {
-            // TODO Auto-generated method stub
 
-            return IteratorCount < capacity;
+            return iteratorCount < capacity;
         }
 
         @Override
         public T next() {
-            // TODO Auto-generated method stub
             T item = rb[index];
             index = indexAddOne(index);
-            IteratorCount += 1;
+            iteratorCount += 1;
             return item;
         }
 
